@@ -14,14 +14,14 @@ pipeline {
             }
         }
 
-        stage('Deploy to S3') {
-            steps {
-                withAWS(credentials: 'aws-jenkins-creds', region: "${AWS_DEFAULT_REGION}") {
-                    bat '''
-                        aws s3 sync . s3://%S3_BUCKET% --delete --exclude ".git/*" --exclude "Jenkinsfile"
-                    '''
-                }
-            }
+       stage('Deploy to S3') {
+    withAWS(credentials: 'aws-jenkins-creds', region: 'eu-north-1') {
+        bat """
+        aws s3 sync ${WORKSPACE}\\celin-ecommerce s3://celin-ecommerce --delete
+        """
+    }
+}
+
         }
     }
 
