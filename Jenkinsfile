@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Seema-nowshatheen/ecommerce'
+                git 'https://github.com/Seema-nowshatheen/ecommerce.git'
             }
         }
         stage('Build') {
