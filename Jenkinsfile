@@ -3,26 +3,24 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Seema-nowshatheen/ecommerce.git'
+                git 'https://github.com/Seema-nowshatheen/ecommerce'
             }
         }
         stage('Build') {
             steps {
-                bat 'echo Building static website...'
-                bat 'dir'   // list files
+                echo 'Running build steps...'
             }
         }
         stage('Test') {
             steps {
-                bat 'echo Running basic validation...'
-                // If you had npm: bat 'npm run lint'
+                echo 'Running tests...'
             }
         }
         stage('Deploy') {
             steps {
-                bat 'echo Deploying website...'
-                // Example local deploy:
-                // bat 'xcopy * C:\\inetpub\\wwwroot\\ecommerce /E /Y'
+                sh '''
+                  aws s3 sync . s3://my-glamcart-bucket --delete
+                '''
             }
         }
     }
