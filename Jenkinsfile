@@ -2,10 +2,7 @@ pipeline {
     agent any
 
     environment {
-        // Inject AWS credentials from Jenkins Credentials (Secret Text)
-        AWS_ACCESS_KEY_ID     = credentials('AKIA57VDLZXUSRIP2JK3')     // ID for Access Key
-        AWS_SECRET_ACCESS_KEY = credentials('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')    // ID for Secret Key
-        AWS_DEFAULT_REGION    = 'eu-north-1'
+        AWS_DEFAULT_REGION = 'eu-north-1'
     }
 
     stages {
@@ -15,23 +12,14 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Upload to S3') {
             steps {
-                echo 'No build step needed for static site'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Skipping tests for static site'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                bat '''
-                    aws s3 sync "celin-ecommerce" s3://celin-ecommerce --delete --region eu-north-1
-                '''
+                withAWS(credentials: 'aws-creds', region: 'eu-north-1') {
+                    sh '''
+                        aws s3 cp index.html s3://celin-ecommerce --acl public-read
+                        aws s3 cp images/ s3://celin-ecommerce/images/ --recursive --acl public-read
+                    '''
+                }
             }
         }
     }
