@@ -19,7 +19,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                  aws s3 sync . s3://my-glamcart-bucket --delete
+                  aws s3 sync . s3://celin-ecommerce --delete
                 '''
             }
         }
