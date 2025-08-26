@@ -2,25 +2,35 @@ pipeline {
     agent any
 
     environment {
-        AWS_DEFAULT_REGION = 'eu-north-1'
+        AWS_DEFAULT_REGION = 'eu-north-1'   // Change to your region
+        S3_BUCKET = 'celin-ecommerce'      // Your S3 bucket
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/Seema-nowshatheen/ecommerce.git'
+                git branch: 'main',
+                    url: 'https://github.com/Seema-nowshatheen/ecommerce.git'
             }
         }
 
-        stage('Upload to S3') {
+        stage('Deploy to S3') {
             steps {
-                withAWS(credentials: 'aws-creds', region: 'eu-north-1') {
+                withAWS(credentials: 'aws-jenkins-creds', region: "${AWS_DEFAULT_REGION}") {
                     sh '''
-                        aws s3 cp index.html s3://celin-ecommerce --acl public-read
-                        aws s3 cp images/ s3://celin-ecommerce/images/ --recursive --acl public-read
+                        aws s3 sync . s3://$S3_BUCKET --delete --exclude ".git/*" --exclude "Jenkinsfile"
                     '''
                 }
             }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Website updated successfully!'
+        }
+        failure {
+            echo '❌ Deployment failed.'
         }
     }
 }
