@@ -24,7 +24,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 bat '''
-                  aws s3 sync "celin ecommerce" s3://celin-ecommerce --delete
+                   aws s3 sync "celin-ecommerce" s3://celin-ecommerce --delete --region eu-north-1
                 '''
             }
         }
