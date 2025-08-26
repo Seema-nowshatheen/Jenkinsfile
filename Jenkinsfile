@@ -18,7 +18,7 @@ pipeline {
             steps {
                 withAWS(credentials: 'aws-jenkins-creds', region: "${AWS_DEFAULT_REGION}") {
                     bat '''
-                        aws s3 sync . s3://$S3_BUCKET --delete --exclude ".git/*" --exclude "Jenkinsfile"
+                        aws s3 sync . s3://%S3_BUCKET% --delete --exclude ".git/*" --exclude "Jenkinsfile"
                     '''
                 }
             }
